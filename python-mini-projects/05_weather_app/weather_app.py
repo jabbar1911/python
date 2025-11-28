@@ -6,7 +6,7 @@ import json
 
 class Weather:
     def __init__(self):
-        self.key = "5a2101621fa43f3106d384f24940c088"   # <-- put your API key here
+        self.key = "4axxxxxxxxxxxxxxxxxxxx"   # <-- put your API key here
         self.url = "http://api.openweathermap.org/data/2.5/weather"
 
     def fetch(self, city):
