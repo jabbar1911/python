@@ -1,49 +1,51 @@
 #!/usr/bin/env python3
-"""File Organizer"""
+"""File Organizer - Auto Organize Current Folder"""
 
-import os
 import shutil
 from pathlib import Path
 
-class FileOrganizer:
-    FILE_CATEGORIES = {
-        'Images': ['.jpg', '.png', '.gif'],
-        'Videos': ['.mp4', '.avi', '.mkv'],
-        'Audio': ['.mp3', '.wav', '.flac'],
-        'Documents': ['.pdf', '.doc', '.docx', '.txt'],
-        'Archives': ['.zip', '.rar', '.7z'],
-        'Others': []
+class Organizer:
+    TYPES = {
+        "Images"    : [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"],
+        "Videos"    : [".mp4", ".mkv", ".avi", ".mov"],
+        "Audio"     : [".mp3", ".wav", ".flac", ".aac"],
+        "Documents" : [".pdf", ".doc", ".docx", ".pptx", ".txt"],
+        "Code"      : [".py", ".java", ".c", ".cpp", ".html", ".js", ".css"],
+        "Archives"  : [".zip", ".rar", ".7z", ".tar", ".gz"],
+        "Others"    : []
     }
 
-    def __init__(self, directory=None):
-        self.directory = Path(directory) if directory else Path.cwd()
+    def __init__(self):
+        self.folder = Path.cwd()   # ⭐ current folder
 
-    def get_category(self, ext):
+    def get_type(self, ext):
         ext = ext.lower()
-        for cat, exts in self.FILE_CATEGORIES.items():
+        for t, exts in self.TYPES.items():
             if ext in exts:
-                return cat
-        return 'Others'
+                return t
+        return "Others"
 
     def organize(self):
-        for cat in self.FILE_CATEGORIES:
-            (self.directory / cat).mkdir(exist_ok=True)
+        # Make folders
+        for t in self.TYPES:
+            (self.folder / t).mkdir(exist_ok=True)
 
-        for file in self.directory.iterdir():
-            if file.is_file():
-                cat = self.get_category(file.suffix)
-                target = self.directory / cat / file.name
-                shutil.move(str(file), str(target))
-                print(f"Moved: {file.name} → {cat}/")
+        # Move files
+        for f in self.folder.iterdir():
+            if (
+                f.is_file()
+                and f.name != Path(__file__).name       # don't move script
+                and f.name.lower() not in ["readme.md", "readme.txt"]   # don't move README
+            ):
+                t = self.get_type(f.suffix)
+                target = self.folder / t / f.name
+                shutil.move(str(f), str(target))
+                print(f"Moved: {f.name} → {t}/")
 
 def main():
-    print("FILE ORGANIZER")
-    print("\nOrganize current directory? (y/n): ", end='')
-
-    if input().lower() == 'y':
-        org = FileOrganizer()
-        org.organize()
-        print("Done!")
+    print("\nFILE ORGANIZER\n")
+    Organizer().organize()
+    print("\n✔ Done!\n")
 
 if __name__ == "__main__":
     main()

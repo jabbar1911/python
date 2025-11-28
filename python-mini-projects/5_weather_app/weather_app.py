@@ -3,51 +3,51 @@
 
 import urllib.request
 import json
-import os
 
-class WeatherApp:
-    def __init__(self, api_key=None):
-        self.api_key = api_key or "YOUR_API_KEY"
-        self.base_url = "http://api.openweathermap.org/data/2.5/weather"
+class Weather:
+    def __init__(self):
+        self.key = "5a2101621fa43f3106d384f24940c088"   # <-- put your API key here
+        self.url = "http://api.openweathermap.org/data/2.5/weather"
 
-    def get_weather(self, city):
+    def fetch(self, city):
         try:
-            url = f"{self.base_url}?q={city}&appid={self.api_key}&units=metric"
-            with urllib.request.urlopen(url) as response:
-                return json.loads(response.read().decode())
+            u = f"{self.url}?q={city}&appid={self.key}&units=metric"
+            with urllib.request.urlopen(u) as r:
+                return json.loads(r.read().decode())
         except:
             return None
 
-    def display(self, data):
-        if not data:
+    def show(self, d):
+        if not d:
+            print("\n❌ City not found or API error!")
             return
 
-        city = data['name']
-        temp = data['main']['temp']
-        desc = data['weather'][0]['description']
-        humidity = data['main']['humidity']
+        c = d["name"]
+        t = d["main"]["temp"]
+        ds = d["weather"][0]["description"]
+        h = d["main"]["humidity"]
 
-        print(f"\n🌤️  {city}")
-        print(f"Temp: {temp}°C")
-        print(f"Condition: {desc}")
-        print(f"Humidity: {humidity}%")
+        print(f"\n🌤️  {c}")
+        print(f"Temp     : {t}°C")
+        print(f"Condition: {ds}")
+        print(f"Humidity : {h}%")
 
 def main():
-    print("WEATHER APP")
-    print("\n⚠️  Get free API key from openweathermap.org")
+    print("=" * 60)
+    print("WEATHER APP".center(60))
+    print("=" * 60)
 
-    api_key = input("\nAPI Key (or press Enter): ").strip()
-    app = WeatherApp(api_key)
+    app = Weather()
 
     while True:
-        city = input("\nCity (quit to exit): ").strip()
+        city = input("\nCity (type 'quit' to exit): ").strip()
 
-        if city.lower() == 'quit':
-            print("Goodbye!")
+        if city.lower() == "quit":
+            print("\n👋 Goodbye!")
             break
 
-        data = app.get_weather(city)
-        app.display(data)
+        d = app.fetch(city)
+        app.show(d)
 
 if __name__ == "__main__":
     main()

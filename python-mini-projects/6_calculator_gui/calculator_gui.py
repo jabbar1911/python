@@ -1,73 +1,114 @@
 #!/usr/bin/env python3
-"""Calculator GUI using Tkinter"""
+"""Beautiful Colorful Calculator - Beginner Friendly"""
 
 import tkinter as tk
 
-class Calculator:
+class Calc:
     def __init__(self, root):
         self.root = root
         self.root.title("Calculator")
-        self.root.geometry("400x550")
-        self.expression = ""
-        self.result = tk.StringVar()
-        self.create_ui()
+        self.root.geometry("330x450")
+        self.root.configure(bg="#ffffff")
+        self.root.resizable(False, False)
 
-    def create_ui(self):
+        self.expr = ""
+        self.val = tk.StringVar(value="0")
+
+        self.build_ui()
+
+    def build_ui(self):
         # Display
-        display = tk.Entry(
+        disp = tk.Entry(
             self.root,
-            textvariable=self.result,
-            font=('Arial', 20),
-            justify='right'
+            textvariable=self.val,
+            font=("Arial", 32, "bold"),
+            justify="right",
+            bg="#f0f7ff",
+            fg="#1a1a1a",
+            border=0,
+            relief="flat"
         )
-        display.pack(fill='both', padx=10, pady=10, ipady=10)
-        self.result.set("0")
+        disp.pack(fill="both", padx=12, pady=15, ipady=18)
 
-        # Buttons
-        buttons = [
-            ['C', '←', '%', '÷'],
-            ['7', '8', '9', '×'],
-            ['4', '5', '6', '−'],
-            ['1', '2', '3', '+'],
-            ['0', '.', '=', '']
+        # Color themes
+        colors = {
+            "num": "#e3f2fd",     # light blue
+            "op":  "#ffcccb",     # soft red
+            "act": "#c8e6c9",     # green
+            "dot": "#fff3cd",     # soft yellow
+            "eq":  "#90caf9"      # blue
+        }
+
+        # Buttons layout
+        btns = [
+            ["C", "←", "%", "/"],
+            ["7", "8", "9", "*"],
+            ["4", "5", "6", "-"],
+            ["1", "2", "3", "+"],
+            ["0", "00", ".", "="]
         ]
 
-        for row in buttons:
-            frame = tk.Frame(self.root)
-            frame.pack(fill='both', expand=True)
+        frame = tk.Frame(self.root, bg="white")
+        frame.pack(fill="both", expand=True, padx=5, pady=5)
 
-            for btn_text in row:
-                if btn_text:
-                    btn = tk.Button(
-                        frame,
-                        text=btn_text,
-                        font=('Arial', 18),
-                        command=lambda x=btn_text: self.on_click(x)
-                    )
-                    btn.pack(side='left', fill='both', expand=True, padx=2, pady=2)
+        for r in range(5):
+            for c in range(4):
+                txt = btns[r][c]
 
-    def on_click(self, char):
-        if char == 'C':
-            self.expression = ""
-            self.result.set("0")
-        elif char == '←':
-            self.expression = self.expression[:-1]
-            self.result.set(self.expression or "0")
-        elif char == '=':
+                # Color mapping
+                if txt in "0123456789" or txt == "00":
+                    bg = colors["num"]
+                elif txt == ".":
+                    bg = colors["dot"]
+                elif txt == "=":
+                    bg = colors["eq"]
+                elif txt in ["C", "←"]:
+                    bg = colors["act"]
+                else:
+                    bg = colors["op"]
+
+                b = tk.Button(
+                    frame,
+                    text=txt,
+                    font=("Arial", 20, "bold"),
+                    bg=bg,
+                    fg="black",
+                    activebackground="#d9d9d9",
+                    border=0,
+                    command=lambda x=txt: self.press(x)
+                )
+                b.grid(row=r, column=c, sticky="nsew", padx=4, pady=4)
+
+        # Equal button sizes
+        for i in range(5):
+            frame.rowconfigure(i, weight=1)
+        for i in range(4):
+            frame.columnconfigure(i, weight=1)
+
+    def press(self, ch):
+        if ch == "C":
+            self.expr = ""
+            self.val.set("0")
+
+        elif ch == "←":
+            self.expr = self.expr[:-1]
+            self.val.set(self.expr if self.expr else "0")
+
+        elif ch == "=":
             try:
-                calc_expr = self.expression.replace('×', '*').replace('÷', '/').replace('−', '-')
-                result = eval(calc_expr)
-                self.expression = str(result)
-                self.result.set(self.expression)
+                self.expr = str(eval(self.expr))
+                self.val.set(self.expr)
             except:
-                self.result.set("Error")
+                self.val.set("Error")
+                self.expr = ""
+
         else:
-            self.expression += char
-            self.result.set(self.expression)
+            self.expr += ch
+            self.val.set(self.expr)
 
 def main():
     root = tk.Tk()
-    calc = Calculator(root)
+    Calc(root)
     root.mainloop()
 
 if __name__ == "__main__":

@@ -5,22 +5,20 @@ import random
 import math
 
 class Game:
-    def __init__(self, min_num=1, max_num=100):
-        self.min_num = min_num
-        self.max_num = max_num
-        self.secret = random.randint(min_num, max_num)
-        self.attempts = 0
-        self.max_attempts = math.ceil(math.log2(max_num - min_num + 1)) + 3
+    def __init__(self, lo=1, hi=100):
+        self.lo = lo
+        self.hi = hi
+        self.num = random.randint(lo, hi)
+        self.try_count = 0
+        self.max_try = math.ceil(math.log2(hi - lo + 1)) + 3
 
-    def guess(self, guess):
-        self.attempts += 1
-
-        if guess == self.secret:
-            return True, f"🎉 Correct in {self.attempts} attempts!"
-        elif guess < self.secret:
+    def check(self, g):
+        self.try_count += 1
+        if g == self.num:
+            return True, f"🎉 Correct in {self.try_count} attempts!"
+        if g < self.num:
             return False, "📈 Too low!"
-        else:
-            return False, "📉 Too high!"
+        return False, "📉 Too high!"
 
 def main():
     print("=" * 60)
@@ -28,38 +26,38 @@ def main():
     print("=" * 60)
 
     print("\nDifficulty:")
-    print("1. Easy (1-50)")
+    print("1. Easy   (1-50)")
     print("2. Medium (1-100)")
-    print("3. Hard (1-500)")
+    print("3. Hard   (1-500)")
 
-    choice = input("\nChoice (1-3): ")
+    ch = input("\nChoice (1-3): ")
 
-    if choice == '1':
+    if ch == '1':
         game = Game(1, 50)
-    elif choice == '2':
+    elif ch == '2':
         game = Game(1, 100)
-    elif choice == '3':
+    elif ch == '3':
         game = Game(1, 500)
     else:
-        print("Invalid choice!")
+        print("❌ Invalid choice!")
         return
 
-    print(f"\nGuess between {game.min_num}-{game.max_num}")
-    print(f"Attempts: {game.max_attempts}\n")
+    print(f"\nGuess between {game.lo}-{game.hi}")
+    print(f"Attempts allowed: {game.max_try}\n")
 
-    while game.attempts < game.max_attempts:
+    while game.try_count < game.max_try:
         try:
-            guess = int(input("Your guess: "))
-            correct, message = game.guess(guess)
-            print(message)
+            g = int(input("Your guess: "))
+            ok, msg = game.check(g)
+            print(msg)
 
-            if correct:
+            if ok:
                 break
         except ValueError:
-            print("❌ Invalid number!")
+            print("❌ Enter a valid number!")
 
-    if game.attempts >= game.max_attempts:
-        print(f"\n😞 Game Over! Number was {game.secret}")
+    if game.try_count >= game.max_try:
+        print(f"\n😞 Game Over! The number was {game.num}")
 
 if __name__ == "__main__":
     main()

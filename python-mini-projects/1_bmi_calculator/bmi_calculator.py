@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """BMI Calculator - Calculate Body Mass Index"""
 
-def calculate_bmi(weight, height):
-    return weight / (height ** 2)
+def calculate_bmi(w, h):
+    return w / (h ** 2)
 
-def get_bmi_category(bmi):
-    if bmi < 18.5:
+def get_bmi_category(b):
+    if b < 18.5:
         return "Underweight"
-    elif 18.5 <= bmi < 25:
+    elif b < 25:
         return "Normal weight"
-    elif 25 <= bmi < 30:
+    elif b < 30:
         return "Overweight"
     else:
         return "Obese"
@@ -20,22 +20,23 @@ def main():
     print("=" * 50)
 
     try:
-        weight = float(input("\nEnter your weight (in kg): "))
-        height = float(input("Enter your height (in meters): "))
+        w = float(input("\nEnter weight (kg): "))
+        h = float(input("Enter height (m): "))
 
-        if weight <= 0 or height <= 0:
-            print("\n❌ Error: Weight and height must be positive!")
+        if w <= 0 or h <= 0:
+            print("\n❌ Error: Weight & height must be positive!")
             return
 
-        bmi = calculate_bmi(weight, height)
-        category = get_bmi_category(bmi)
+        bmi = calculate_bmi(w, h)
+        cat = get_bmi_category(bmi)
 
         print("\n" + "=" * 50)
-        print(f"Your BMI: {bmi:.2f}")
-        print(f"Category: {category}")
+        print(f"Your BMI : {bmi:.2f}")
+        print(f"Category : {cat}")
         print("=" * 50)
+
     except ValueError:
-        print("\n❌ Error: Please enter valid numbers!")
+        print("\n❌ Error: Enter valid numbers!")
 
 if __name__ == "__main__":
     main()

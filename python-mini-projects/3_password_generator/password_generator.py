@@ -4,42 +4,35 @@
 import random
 import string
 
-def generate_password(length=12, use_upper=True, use_lower=True, 
-                     use_digits=True, use_special=True):
-    char_pool = ""
+def gen_pwd(n=12, up=True, low=True, dig=True, sp=True):
+    p = ""
 
-    if use_lower:
-        char_pool += string.ascii_lowercase
-    if use_upper:
-        char_pool += string.ascii_uppercase
-    if use_digits:
-        char_pool += string.digits
-    if use_special:
-        char_pool += string.punctuation
+    if low:
+        p += string.ascii_lowercase
+    if up:
+        p += string.ascii_uppercase
+    if dig:
+        p += string.digits
+    if sp:
+        p += string.punctuation
 
-    if not char_pool:
-        return "Error: Select at least one character type!"
+    if not p:
+        return "Error: Choose at least one character type!"
 
-    return ''.join(random.choice(char_pool) for _ in range(length))
+    return ''.join(random.choice(p) for _ in range(n))
 
-def check_strength(password):
-    score = 0
-    if len(password) >= 8:
-        score += 1
-    if len(password) >= 12:
-        score += 1
-    if any(c.islower() for c in password):
-        score += 1
-    if any(c.isupper() for c in password):
-        score += 1
-    if any(c.isdigit() for c in password):
-        score += 1
-    if any(c in string.punctuation for c in password):
-        score += 1
+def strength(pwd):
+    s = 0
+    if len(pwd) >= 8:  s += 1
+    if len(pwd) >= 12: s += 1
+    if any(c.islower() for c in pwd): s += 1
+    if any(c.isupper() for c in pwd): s += 1
+    if any(c.isdigit() for c in pwd): s += 1
+    if any(c in string.punctuation for c in pwd): s += 1
 
-    if score <= 2:
+    if s <= 2:
         return "Weak 🔴"
-    elif score <= 4:
+    elif s <= 4:
         return "Medium 🟡"
     else:
         return "Strong 🟢"
@@ -51,22 +44,23 @@ def main():
 
     while True:
         try:
-            length = int(input("\nPassword length (6-128): "))
-            if length < 6 or length > 128:
-                print("❌ Length must be 6-128!")
+            n = int(input("\nPassword length (6-128): "))
+            if n < 6 or n > 128:
+                print("❌ Length must be 6–128!")
                 continue
 
-            password = generate_password(length)
+            pwd = gen_pwd(n)
 
             print("\n" + "=" * 60)
-            print(f"Password: {password}")
-            print(f"Strength: {check_strength(password)}")
+            print(f"Password: {pwd}")
+            print(f"Strength: {strength(pwd)}")
             print("=" * 60)
 
-            another = input("\nGenerate another? (y/n): ").lower()
-            if another != 'y':
+            ch = input("\nGenerate another? (y/n): ").lower()
+            if ch != 'y':
                 print("\n👋 Goodbye!\n")
                 break
+
         except ValueError:
             print("❌ Invalid input!")
 

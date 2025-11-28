@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
-"""Quiz Game"""
+"""Quiz Game - Improved Version"""
 
 import random
 
 questions = [
-    {"q": "What is the capital of France?", "options": ["London", "Berlin", "Paris", "Madrid"], "ans": 2},
-    {"q": "Which planet is Red?", "options": ["Venus", "Mars", "Jupiter", "Saturn"], "ans": 1},
-    {"q": "Who wrote Romeo and Juliet?", "options": ["Dickens", "Austen", "Shakespeare", "Twain"], "ans": 2},
+    {"q": "What is the capital of France?", 
+     "options": ["London", "Berlin", "Paris", "Madrid"], "ans": 2},
+
+    {"q": "Which planet is known as the Red Planet?", 
+     "options": ["Venus", "Mars", "Jupiter", "Saturn"], "ans": 1},
+
+    {"q": "Who wrote Romeo and Juliet?", 
+     "options": ["Dickens", "Austen", "Shakespeare", "Twain"], "ans": 2},
+
+    {"q": "What is the largest ocean?", 
+     "options": ["Indian", "Atlantic", "Arctic", "Pacific"], "ans": 3},
+
+    {"q": "Which gas do plants release?", 
+     "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], "ans": 0},
 ]
 
 def main():
@@ -23,16 +34,23 @@ def main():
             print(f"  {j}. {opt}")
 
         try:
-            ans = int(input("\nYour answer (1-4): ")) - 1
-            if ans == q['ans']:
+            ans = int(input("\nYour answer (1-4): "))
+            if ans < 1 or ans > 4:
+                print("⚠ Invalid Choice! Skipped.")
+                continue
+
+            if ans - 1 == q['ans']:
                 print("✅ Correct!")
                 score += 1
             else:
-                print(f"❌ Wrong! Answer: {q['options'][q['ans']]}")
+                print(f"❌ Wrong! Correct: {q['options'][q['ans']]}")
         except:
-            print("Invalid!")
+            print("⚠ Invalid Input! Skipped.")
 
-    print(f"\nScore: {score}/{len(q_list)}")
+    print("\n" + "="*60)
+    print(f"FINAL SCORE: {score}/{len(q_list)}")
+    print("="*60)
 
 if __name__ == "__main__":
     main()
+
